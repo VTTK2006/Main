@@ -235,9 +235,11 @@ Content.Parent=Main
 
 Content.Position=UDim2.fromOffset(150,55)
 
-Content.Size=UDim2.fromOffset(440,280)
+Content.Size=UDim2.new(1,-165,1,-65)
 
 Content.BackgroundTransparency=1
+
+Content.ClipsDescendants=true
 
 
 
@@ -288,10 +290,12 @@ Page.Parent=Content
 
 Page.Size=UDim2.fromScale(1,1)
 
-Page.BackgroundColor3=
-Color3.fromRGB(20,20,20)
+Page.AutomaticCanvasSize=
+Enum.AutomaticSize.Y
 
-Page.ScrollBarThickness=0
+Page.ScrollBarThickness=3
+
+Page.ClipsDescendants=true
 
 
 
@@ -302,7 +306,8 @@ Instance.new("UICorner",Page)
 local List=Instance.new("UIListLayout",Page)
 
 List.Padding=UDim.new(0,8)
-
+List.SortOrder=
+Enum.SortOrder.LayoutOrder
 
 
 Pages[name]=Page
