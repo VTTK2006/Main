@@ -1,146 +1,638 @@
---// TK HUB LIBRARY - CLEAN VERSION
+--// TK HUB LIBRARY
+--// Executor Version
+
 
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
+local UIS = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 
+
 local Player = Players.LocalPlayer
 
--- Khởi tạo giao diện chính
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "TK_HUB_GUI"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = (gethui and gethui()) or game.CoreGui
 
--- Tạo khung Main
-local MainFrame = Instance.new("Frame")
-MainFrame.Parent = ScreenGui
-MainFrame.Size = UDim2.fromOffset(600, 350)
-MainFrame.Position = UDim2.new(0.5, -300, 0.5, -175)
-MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- Màu tối hơn, sang trọng hơn
-MainFrame.ClipsDescendants = true
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
 
--- 
+local Gui = Instance.new("ScreenGui")
+Gui.Name="TK_HUB"
+Gui.ResetOnSpawn=false
+Gui.Parent=gethui and gethui() or game.CoreGui
 
------------------------------------------------------------
--- CÁC HÀM HỖ TRỢ (UI UTILITIES)
------------------------------------------------------------
 
--- Hàm tạo bo góc nhanh
-local function AddCorner(parent, radius)
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, radius or 8)
-    corner.Parent = parent
-    return corner
+
+local Main=Instance.new("Frame")
+Main.Parent=Gui
+Main.Size=UDim2.fromOffset(600,350)
+Main.Position=UDim2.new(.5,-300,.5,-175)
+Main.BackgroundColor3=Color3.fromRGB(15,15,15)
+Main.ClipsDescendants=true
+
+
+Instance.new("UICorner",Main).CornerRadius=
+UDim.new(0,12)
+
+
+
+-- DRAG
+
+local drag=false
+local dragStart
+local startPos
+
+
+Main.InputBegan:Connect(function(i)
+
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
+
+drag=true
+dragStart=i.Position
+startPos=Main.Position
+
 end
 
--- Hàm kéo thả menu
-local function MakeDraggable(uiObject)
-    local drag, dragStart, startPos
-    
-    uiObject.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            drag = true
-            dragStart = input.Position
-            startPos = uiObject.Position
-        end
-    end)
+end)
 
-    UserInputService.InputChanged:Connect(function(input)
-        if drag and input.UserInputType == Enum.UserInputType.MouseMovement then
-            local delta = input.Position - dragStart
-            uiObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end)
 
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            drag = false
-        end
-    end)
+UIS.InputChanged:Connect(function(i)
+
+if drag and i.UserInputType==Enum.UserInputType.MouseMovement then
+
+local d=i.Position-dragStart
+
+Main.Position=
+UDim2.new(
+startPos.X.Scale,
+startPos.X.Offset+d.X,
+startPos.Y.Scale,
+startPos.Y.Offset+d.Y
+)
+
 end
 
-MakeDraggable(MainFrame)
+end)
 
------------------------------------------------------------
--- THIẾT KẾ GIAO DIỆN (UI COMPONENTS)
------------------------------------------------------------
 
--- 1. Header (Tiêu đề)
-local Header = Instance.new("Frame", MainFrame)
-Header.Size = UDim2.new(1, 0, 0, 45)
-Header.BackgroundTransparency = 1
+UIS.InputEnded:Connect(function(i)
 
-local Title = Instance.new("TextLabel", Header)
-Title.Position = UDim2.fromOffset(15, 0)
-Title.Size = UDim2.new(0.5, 0, 1, 0)
-Title.Text = "TK HUB - Dashboard"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 20
-Title.BackgroundTransparency = 1
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
+drag=false
+end
 
--- 2. Sidebar (Danh mục)
-local Sidebar = Instance.new("Frame", MainFrame)
-Sidebar.Position = UDim2.fromOffset(10, 55)
-Sidebar.Size = UDim2.fromOffset(130, 280)
-Sidebar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-AddCorner(Sidebar)
+end)
 
-local ListLayout = Instance.new("UIListLayout", Sidebar)
-ListLayout.Padding = UDim.new(0, 5)
 
--- 3. Content (Nội dung)
-local ContentContainer = Instance.new("Frame", MainFrame)
-ContentContainer.Position = UDim2.fromOffset(150, 55)
-ContentContainer.Size = UDim2.new(1, -165, 1, -65)
-ContentContainer.BackgroundTransparency = 1
 
-local PageLayout = Instance.new("UIPageLayout", ContentContainer)
-PageLayout.TweenTime = 0.3
+-- HEADER
 
------------------------------------------------------------
--- HỆ THỐNG TAB VÀ CONTROLS
------------------------------------------------------------
+
+local Header=Instance.new("Frame")
+Header.Parent=Main
+Header.Size=UDim2.new(1,0,0,45)
+Header.BackgroundTransparency=1
+
+
+
+local Title=Instance.new("TextLabel")
+Title.Parent=Header
+Title.Position=UDim2.fromOffset(15,0)
+Title.Size=UDim2.new(.5,0,1,0)
+Title.Text="TK HUB"
+Title.TextColor3=Color3.fromRGB(255,0,0)
+Title.Font=Enum.Font.GothamBold
+Title.TextSize=20
+Title.BackgroundTransparency=1
+
+
+
+local Close=Instance.new("TextButton")
+Close.Parent=Header
+Close.Position=UDim2.new(1,-40,.5,-15)
+Close.Size=UDim2.fromOffset(30,30)
+Close.Text="X"
+Close.BackgroundTransparency=1
+Close.TextColor3=Color3.new(1,1,1)
+
+
+Close.MouseButton1Click:Connect(function()
+Gui:Destroy()
+end)
+
+
+
+
+
+-- SIDEBAR
+
+
+local Side=Instance.new("Frame")
+Side.Parent=Main
+Side.Position=UDim2.fromOffset(10,55)
+Side.Size=UDim2.fromOffset(130,280)
+Side.BackgroundColor3=Color3.fromRGB(25,25,25)
+
+
+Instance.new("UICorner",Side)
+
+
+
+local SideList=Instance.new("UIListLayout",Side)
+
+SideList.Padding=
+UDim.new(0,6)
+
+
+
+
+
+-- CONTENT
+
+
+local Content=Instance.new("Frame")
+
+Content.Parent=Main
+
+Content.Position=
+UDim2.fromOffset(150,55)
+
+Content.Size=
+UDim2.new(1,-165,1,-65)
+
+Content.BackgroundTransparency=1
+
+Content.ClipsDescendants=true
+
+
+
+local PageLayout=Instance.new("UIPageLayout")
+
+PageLayout.Parent=Content
+
+PageLayout.TweenTime=.35
+
+PageLayout.EasingStyle=
+Enum.EasingStyle.Quart
+
+
+
+
+local Pages={}
+
+
 
 function CreateTab(name)
-    local TabButton = Instance.new("TextButton", Sidebar)
-    TabButton.Size = UDim2.new(1, -10, 0, 35)
-    TabButton.Text = name
-    TabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    TabButton.TextColor3 = Color3.new(1, 1, 1)
-    AddCorner(TabButton)
 
-    local Page = Instance.new("ScrollingFrame", ContentContainer)
-    Page.Size = UDim2.fromScale(1, 1)
-    Page.BackgroundTransparency = 1
-    Page.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    
-    TabButton.MouseButton1Click:Connect(function()
-        PageLayout:JumpTo(Page)
-    end)
-    
-    return Page
-end
 
--- 
+local b=Instance.new("TextButton")
 
---// VÍ DỤ SỬ DỤNG
-local HomeTab = CreateTab("🏠 Home")
+b.Parent=Side
 
--- Hàm thêm nút bấm
-function AddButton(page, text, callback)
-    local btn = Instance.new("TextButton", page)
-    btn.Size = UDim2.new(1, -20, 0, 40)
-    btn.Text = text
-    btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-    btn.TextColor3 = Color3.new(1, 1, 1)
-    AddCorner(btn)
-    btn.MouseButton1Click:Connect(callback or function() end)
-end
+b.Size=
+UDim2.new(1,-10,0,35)
 
-AddButton(HomeTab, "Click Me!", function()
-    print("Button Pressed!")
+b.Text=name
+
+b.BackgroundColor3=
+Color3.fromRGB(40,40,40)
+
+b.TextColor3=Color3.new(1,1,1)
+
+
+
+Instance.new("UICorner",b)
+
+
+
+local page=Instance.new("ScrollingFrame")
+
+page.Parent=Content
+
+page.Size=
+UDim2.fromScale(1,1)
+
+page.BackgroundColor3=
+Color3.fromRGB(20,20,20)
+
+page.AutomaticCanvasSize=
+Enum.AutomaticSize.Y
+
+page.ScrollBarThickness=3
+
+
+
+Instance.new("UICorner",page)
+
+
+
+local layout=Instance.new("UIListLayout",page)
+
+layout.Padding=
+UDim.new(0,8)
+
+layout.SortOrder=
+Enum.SortOrder.LayoutOrder
+
+
+
+Pages[name]=page
+
+
+
+b.MouseButton1Click:Connect(function()
+
+PageLayout:JumpTo(page)
+
 end)
+
+
+
+return page
+
+end
+
+
+
+
+
+
+-- BUTTON
+
+
+function AddButton(page,text,func)
+
+
+local b=Instance.new("TextButton")
+
+b.Parent=page
+
+b.Size=
+UDim2.new(1,-20,0,40)
+
+b.Text=text
+
+b.BackgroundColor3=
+Color3.fromRGB(45,45,45)
+
+b.TextColor3=
+Color3.new(1,1,1)
+
+
+Instance.new("UICorner",b)
+
+
+
+b.MouseButton1Click:Connect(function()
+
+if func then
+func()
+end
+
+end)
+
+end
+
+
+
+
+
+
+
+-- SLIDER
+
+
+function AddSlider(page,text,min,max,value,func)
+
+
+local b=Instance.new("TextButton")
+
+b.Parent=page
+
+b.Size=
+UDim2.new(1,-20,0,40)
+
+b.Text=text.." : "..value
+
+b.BackgroundColor3=
+Color3.fromRGB(45,45,45)
+
+b.TextColor3=
+Color3.new(1,1,1)
+
+
+Instance.new("UICorner",b)
+
+
+
+local hold=false
+
+
+b.MouseButton1Down:Connect(function()
+
+hold=true
+
+end)
+
+
+UIS.InputEnded:Connect(function(i)
+
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
+hold=false
+end
+
+end)
+
+
+UIS.InputChanged:Connect(function(i)
+
+if hold then
+
+
+local p=
+math.clamp(
+(i.Position.X-b.AbsolutePosition.X)
+/b.AbsoluteSize.X,
+0,
+1
+)
+
+
+value=
+math.floor(
+min+(max-min)*p
+)
+
+
+b.Text=text.." : "..value
+
+
+if func then
+func(value)
+end
+
+
+end
+
+end)
+
+
+end
+
+
+
+
+
+
+-- DROPDOWN
+
+
+function AddDropdown(page,text,list,func)
+
+
+AddButton(page,text,function()
+
+
+for _,v in pairs(list) do
+
+
+AddButton(page,v,function()
+
+if func then
+func(v)
+end
+
+end)
+
+
+end
+
+
+end)
+
+end
+
+
+
+
+
+
+-- KEYBIND
+
+
+function AddKeybind(page,text,key,func)
+
+
+UIS.InputBegan:Connect(function(i)
+
+
+if i.KeyCode==key then
+
+if func then
+func()
+end
+
+end
+
+
+end)
+
+
+
+AddButton(page,text.." ["..key.Name.."]")
+
+end
+
+
+
+
+
+
+
+-- COLOR
+
+
+function AddColorPicker(page,text,func)
+
+
+AddButton(page,text,function()
+
+
+local c=
+Color3.fromHSV(
+math.random(),
+1,
+1
+)
+
+
+if func then
+func(c)
+end
+
+
+end)
+
+end
+
+
+
+
+
+
+
+-- CONFIG
+
+
+function SaveConfig(name,data)
+
+writefile(
+"TK_"..name..".json",
+HttpService:JSONEncode(data)
+)
+
+end
+
+
+function LoadConfig(name)
+
+if isfile("TK_"..name..".json") then
+
+return HttpService:JSONDecode(
+readfile("TK_"..name..".json")
+)
+
+end
+
+return {}
+
+end
+
+
+
+
+
+
+
+
+-- RESIZE
+
+
+local Resize=Instance.new("TextButton")
+
+Resize.Parent=Main
+
+Resize.Size=UDim2.fromOffset(20,20)
+
+Resize.Position=UDim2.new(1,-20,1,-20)
+
+Resize.Text=""
+
+
+local resize=false
+
+
+Resize.MouseButton1Down:Connect(function()
+
+resize=true
+
+end)
+
+
+
+UIS.InputEnded:Connect(function(i)
+
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
+resize=false
+end
+
+end)
+
+
+
+UIS.InputChanged:Connect(function(i)
+
+if resize and i.UserInputType==Enum.UserInputType.MouseMovement then
+
+
+Main.Size=
+UDim2.fromOffset(
+Main.AbsoluteSize.X+i.Delta.X,
+Main.AbsoluteSize.Y+i.Delta.Y
+)
+
+
+end
+
+end)
+
+
+
+
+
+
+-- EXAMPLE
+
+
+local Home=CreateTab("🏠 Home")
+
+local Shop=CreateTab("🛒 Shop")
+
+local Setting=CreateTab("⚙ Setting")
+
+
+
+AddButton(Home,"Test",function()
+
+print("TK HUB")
+
+end)
+
+
+AddSlider(Home,"Speed",1,100,50,function(v)
+
+print(v)
+
+end)
+
+
+
+AddDropdown(Home,"Mode",
+{
+"Normal",
+"Fast",
+"Ultra"
+},
+function(v)
+
+print(v)
+
+end)
+
+
+
+AddKeybind(Home,"Toggle UI",
+Enum.KeyCode.RightShift,
+function()
+
+Main.Visible=
+not Main.Visible
+
+end)
+
+
+
+AddColorPicker(Home,"Color",function(c)
+
+Main.BackgroundColor3=c
+
+end)
+
+
+
+SaveConfig(
+"Settings",
+{
+Speed=50
+}
+)
+
+
+
+PageLayout:JumpTo(Home)
