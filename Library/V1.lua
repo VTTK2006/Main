@@ -1,23 +1,369 @@
---// ADVANCED COMPONENTS
+--// TK HUB UI LIBRARY
+--// Executor Version
 
 
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
+local TweenService = game:GetService("TweenService")
+
+
+local Player = Players.LocalPlayer
 
 
 
--- UI PAGE ANIMATION
+local TK = {}
 
-local PageLayout = Instance.new("UIPageLayout")
 
-PageLayout.Parent = Content
 
-PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
+-- GUI
 
-PageLayout.EasingStyle = Enum.EasingStyle.Quart
 
-PageLayout.EasingDirection = Enum.EasingDirection.Out
+local Gui = Instance.new("ScreenGui")
+Gui.Name="TK_HUB"
+Gui.Parent=Player.PlayerGui
 
-PageLayout.TweenTime = .35
+
+
+local Main = Instance.new("Frame")
+Main.Parent=Gui
+Main.Size=UDim2.fromOffset(600,350)
+Main.Position=UDim2.new(.5,-300,.5,-175)
+Main.BackgroundColor3=Color3.fromRGB(15,15,15)
+
+
+Instance.new("UICorner",Main).CornerRadius=
+UDim.new(0,12)
+
+
+
+local Header = Instance.new("Frame")
+Header.Parent=Main
+Header.Size=UDim2.new(1,0,0,45)
+Header.BackgroundTransparency=1
+
+
+
+local Title=Instance.new("TextLabel")
+Title.Parent=Header
+Title.Position=UDim2.fromOffset(15,0)
+Title.Size=UDim2.new(.5,0,1,0)
+Title.Text="TK HUB"
+Title.TextColor3=Color3.fromRGB(255,0,0)
+Title.Font=Enum.Font.GothamBold
+Title.TextSize=20
+Title.BackgroundTransparency=1
+
+
+
+
+
+-- DRAG
+
+
+local Dragging=false
+local DragStart
+local StartPos
+
+
+Header.InputBegan:Connect(function(i)
+
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
+
+Dragging=true
+DragStart=i.Position
+StartPos=Main.Position
+
+end
+
+end)
+
+
+UIS.InputChanged:Connect(function(i)
+
+if Dragging and i.UserInputType==Enum.UserInputType.MouseMovement then
+
+local d=i.Position-DragStart
+
+Main.Position=
+UDim2.new(
+StartPos.X.Scale,
+StartPos.X.Offset+d.X,
+StartPos.Y.Scale,
+StartPos.Y.Offset+d.Y
+)
+
+end
+
+end)
+
+
+UIS.InputEnded:Connect(function(i)
+
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
+
+Dragging=false
+
+end
+
+end)
+
+
+
+
+
+
+-- CLOSE
+
+
+local Close=Instance.new("TextButton")
+
+Close.Parent=Header
+
+Close.Position=UDim2.new(1,-40,.5,-15)
+
+Close.Size=UDim2.fromOffset(30,30)
+
+Close.Text="X"
+
+Close.BackgroundTransparency=1
+
+Close.TextColor3=Color3.new(1,1,1)
+
+
+
+Close.MouseButton1Click:Connect(function()
+
+Gui:Destroy()
+
+end)
+
+
+
+
+
+
+
+-- MINIMIZE
+
+
+local Mini=Instance.new("TextButton")
+
+Mini.Parent=Header
+
+Mini.Position=UDim2.new(1,-80,.5,-15)
+
+Mini.Size=UDim2.fromOffset(30,30)
+
+Mini.Text="-"
+
+Mini.BackgroundTransparency=1
+
+Mini.TextColor3=Color3.new(1,1,1)
+
+
+
+
+local Open=Instance.new("TextButton")
+
+Open.Parent=Gui
+
+Open.Size=UDim2.fromOffset(50,50)
+
+Open.Position=UDim2.fromScale(.1,.1)
+
+Open.Text="TK"
+
+Open.Visible=false
+
+
+Mini.MouseButton1Click:Connect(function()
+
+Main.Visible=false
+Open.Visible=true
+
+end)
+
+
+
+Open.MouseButton1Click:Connect(function()
+
+Main.Visible=true
+Open.Visible=false
+
+end)
+
+
+
+
+
+
+
+-- SIDEBAR
+
+
+local Side=Instance.new("Frame")
+
+Side.Parent=Main
+
+Side.Position=UDim2.fromOffset(10,55)
+
+Side.Size=UDim2.fromOffset(130,280)
+
+Side.BackgroundColor3=Color3.fromRGB(25,25,25)
+
+
+Instance.new("UICorner",Side)
+
+
+
+local SideList=Instance.new("UIListLayout",Side)
+
+SideList.Padding=UDim.new(0,5)
+
+
+
+
+
+
+-- CONTENT
+
+
+local Content=Instance.new("Frame")
+
+Content.Parent=Main
+
+Content.Position=UDim2.fromOffset(150,55)
+
+Content.Size=UDim2.fromOffset(440,280)
+
+Content.BackgroundTransparency=1
+
+
+
+local PageLayout=Instance.new("UIPageLayout")
+
+PageLayout.Parent=Content
+
+PageLayout.TweenTime=.3
+
+PageLayout.EasingStyle=Enum.EasingStyle.Quart
+
+
+
+
+
+
+
+local Pages={}
+
+
+
+
+function CreateTab(name)
+
+
+local Button=Instance.new("TextButton")
+
+Button.Parent=Side
+
+Button.Size=UDim2.new(1,-10,0,35)
+
+Button.Text=name
+
+Button.BackgroundColor3=
+Color3.fromRGB(40,40,40)
+
+Button.TextColor3=Color3.new(1,1,1)
+
+
+
+Instance.new("UICorner",Button)
+
+
+
+local Page=Instance.new("ScrollingFrame")
+
+Page.Parent=Content
+
+Page.Size=UDim2.fromScale(1,1)
+
+Page.BackgroundColor3=
+Color3.fromRGB(20,20,20)
+
+Page.ScrollBarThickness=0
+
+
+
+Instance.new("UICorner",Page)
+
+
+
+local List=Instance.new("UIListLayout",Page)
+
+List.Padding=UDim.new(0,8)
+
+
+
+Pages[name]=Page
+
+
+
+Button.MouseButton1Click:Connect(function()
+
+PageLayout:JumpTo(Page)
+
+end)
+
+
+
+return Page
+
+end
+
+
+
+
+
+
+
+-- BUTTON
+
+
+function AddButton(page,text,callback)
+
+
+local b=Instance.new("TextButton")
+
+b.Parent=page
+
+b.Size=UDim2.new(1,-20,0,40)
+
+b.Text=text
+
+b.BackgroundColor3=
+Color3.fromRGB(45,45,45)
+
+b.TextColor3=Color3.new(1,1,1)
+
+
+Instance.new("UICorner",b)
+
+
+
+b.MouseButton1Click:Connect(function()
+
+if callback then
+
+callback()
+
+end
+
+end)
+
+
+end
+
 
 
 
@@ -27,119 +373,84 @@ PageLayout.TweenTime = .35
 -- SLIDER
 
 
-function AddSlider(page,text,min,max,default,callback)
+function AddSlider(page,text,min,max,value,callback)
 
 
-local Value=default
+local b=Instance.new("TextButton")
 
+b.Parent=page
 
+b.Size=UDim2.new(1,-20,0,45)
 
-local Frame=Instance.new("Frame")
+b.Text=text.." : "..value
 
-Frame.Parent=page
+b.BackgroundColor3=
+Color3.fromRGB(40,40,40)
 
-Frame.Size=UDim2.new(1,-20,0,60)
-
-Frame.BackgroundColor3=
-Color3.fromRGB(35,35,35)
-
-
-Instance.new("UICorner",Frame)
+b.TextColor3=Color3.new(1,1,1)
 
 
 
-local Label=Instance.new("TextLabel")
-
-Label.Parent=Frame
-
-Label.Size=UDim2.new(1,0,0,25)
-
-Label.Text=text.." : "..Value
-
-Label.TextColor3=Color3.new(1,1,1)
-
-Label.BackgroundTransparency=1
+Instance.new("UICorner",b)
 
 
 
-
-local Bar=Instance.new("Frame")
-
-Bar.Parent=Frame
-
-Bar.Position=UDim2.fromOffset(10,35)
-
-Bar.Size=UDim2.new(.9,0,0,8)
-
-Bar.BackgroundColor3=
-Color3.fromRGB(70,70,70)
-
-
-Instance.new("UICorner",Bar)
+local dragging=false
 
 
 
+b.MouseButton1Down:Connect(function()
 
-local Fill=Instance.new("Frame")
+dragging=true
 
-Fill.Parent=Bar
-
-Fill.Size=
-UDim2.new(
-(Value-min)/(max-min),
-0,
-1,
-0
-)
-
-Fill.BackgroundColor3=
-Color3.fromRGB(255,0,0)
+end)
 
 
-Instance.new("UICorner",Fill)
+UIS.InputEnded:Connect(function(i)
+
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
+
+dragging=false
+
+end
+
+end)
 
 
 
+UIS.InputChanged:Connect(function(i)
 
-Bar.InputBegan:Connect(function(input)
-
-if input.UserInputType ==
-Enum.UserInputType.MouseButton1 then
+if dragging then
 
 
-local percent =
+local percent=
 math.clamp(
-(input.Position.X-Bar.AbsolutePosition.X)
-/Bar.AbsoluteSize.X,
+(i.Position.X-b.AbsolutePosition.X)
+/b.AbsoluteSize.X,
 0,
 1
 )
 
 
-Value =
+value=
 math.floor(
 min+(max-min)*percent
 )
 
 
-Fill.Size=
-UDim2.new(percent,0,1,0)
-
-
-Label.Text=
-text.." : "..Value
+b.Text=text.." : "..value
 
 
 if callback then
-callback(Value)
+
+callback(value)
+
 end
 
 
 end
-
 
 end)
-
 
 
 end
@@ -153,86 +464,56 @@ end
 -- DROPDOWN
 
 
-
 function AddDropdown(page,text,list,callback)
 
 
-local Open=false
+local b=Instance.new("TextButton")
 
+b.Parent=page
 
+b.Size=UDim2.new(1,-20,0,40)
 
-local Button=Instance.new("TextButton")
+b.Text=text
 
-Button.Parent=page
-
-Button.Size=
-UDim2.new(1,-20,0,40)
-
-Button.Text=text
-
-Button.BackgroundColor3=
+b.BackgroundColor3=
 Color3.fromRGB(40,40,40)
 
-Button.TextColor3=
-Color3.new(1,1,1)
+b.TextColor3=Color3.new(1,1,1)
 
 
 
-Instance.new("UICorner",Button)
+Instance.new("UICorner",b)
 
 
 
-local Menu=Instance.new("Frame")
-
-Menu.Parent=page
-
-Menu.Size=
-UDim2.new(1,-20,0,#list*35)
-
-Menu.Visible=false
-
-Menu.BackgroundColor3=
-Color3.fromRGB(25,25,25)
+b.MouseButton1Click:Connect(function()
 
 
-
-local layout=Instance.new("UIListLayout",Menu)
-
+for _,v in pairs(list) do
 
 
-for _,item in pairs(list) do
+local o=Instance.new("TextButton")
+
+o.Parent=page
+
+o.Size=UDim2.new(1,-20,0,30)
+
+o.Text=v
 
 
-local Option=Instance.new("TextButton")
+o.MouseButton1Click:Connect(function()
 
-Option.Parent=Menu
-
-Option.Size=
-UDim2.new(1,0,0,35)
-
-Option.Text=item
-
-Option.TextColor3=
-Color3.new(1,1,1)
-
-Option.BackgroundColor3=
-Color3.fromRGB(50,50,50)
-
-
-
-Option.MouseButton1Click:Connect(function()
-
-Button.Text=text.." : "..item
-
-Menu.Visible=false
+b.Text=text.." : "..v
 
 
 if callback then
 
-callback(item)
+callback(v)
 
 end
 
+
+o:Destroy()
 
 end)
 
@@ -240,18 +521,7 @@ end)
 end
 
 
-
-
-
-Button.MouseButton1Click:Connect(function()
-
-Open=not Open
-
-Menu.Visible=Open
-
-
 end)
-
 
 
 end
@@ -265,44 +535,13 @@ end
 -- KEYBIND
 
 
-
 function AddKeybind(page,text,key,callback)
 
 
-
-local Button=Instance.new("TextButton")
-
-Button.Parent=page
-
-Button.Size=
-UDim2.new(1,-20,0,40)
-
-Button.Text=
-text.." ["..key.Name.."]"
+UIS.InputBegan:Connect(function(i)
 
 
-Button.BackgroundColor3=
-Color3.fromRGB(40,40,40)
-
-Button.TextColor3=
-Color3.new(1,1,1)
-
-
-Instance.new("UICorner",Button)
-
-
-
-
-local Current=key
-
-
-
-UIS.InputBegan:Connect(function(input,gp)
-
-if gp then return end
-
-
-if input.KeyCode==Current then
+if i.KeyCode==key then
 
 
 if callback then
@@ -319,43 +558,7 @@ end)
 
 
 
-
-
-Button.MouseButton1Click:Connect(function()
-
-
-Button.Text="Press Key..."
-
-
-local con
-
-
-con=UIS.InputBegan:Connect(function(input)
-
-
-if input.KeyCode ~= Enum.KeyCode.Unknown then
-
-
-Current=input.KeyCode
-
-
-Button.Text=
-text.." ["..Current.Name.."]"
-
-
-con:Disconnect()
-
-
-end
-
-
-end)
-
-
-
-end)
-
-
+AddButton(page,text.." ["..key.Name.."]")
 
 end
 
@@ -365,57 +568,25 @@ end
 
 
 
-
--- COLOR PICKER
+-- COLOR
 
 
 function AddColorPicker(page,text,callback)
 
 
-
-local Color=Color3.fromRGB(255,0,0)
-
+AddButton(page,text,function()
 
 
-local Button=Instance.new("TextButton")
-
-Button.Parent=page
-
-Button.Size=
-UDim2.new(1,-20,0,40)
-
-Button.Text=text
-
-Button.BackgroundColor3=Color
-
-
-Button.TextColor3=
-Color3.new(1,1,1)
-
-
-Instance.new("UICorner",Button)
-
-
-
-
-
-Button.MouseButton1Click:Connect(function()
-
-
-Color =
-Color3.fromHSV(
+local c=Color3.fromHSV(
 math.random(),
 1,
 1
 )
 
 
-Button.BackgroundColor3=Color
-
-
 if callback then
 
-callback(Color)
+callback(c)
 
 end
 
@@ -431,32 +602,19 @@ end
 
 
 
-
-
--- SAVE CONFIG
-
-
-local Config={}
-
+-- CONFIG
 
 
 function SaveConfig(name,data)
 
 
-Config[name]=data
-
-
-
 writefile(
 "TK_"..name..".json",
-HttpService:JSONEncode(Config[name])
+HttpService:JSONEncode(data)
 )
 
 
-
 end
-
-
 
 
 
@@ -474,9 +632,7 @@ readfile("TK_"..name..".json")
 end
 
 
-
-return nil
-
+return {}
 
 end
 
@@ -486,48 +642,36 @@ end
 
 
 
--- RESIZE CORNER
+-- RESIZE
 
 
 local Resize=Instance.new("TextButton")
 
 Resize.Parent=Main
 
-Resize.Size=
-UDim2.fromOffset(20,20)
+Resize.Size=UDim2.fromOffset(20,20)
 
-Resize.Position=
-UDim2.new(1,-20,1,-20)
+Resize.Position=UDim2.new(1,-20,1,-20)
 
 Resize.Text=""
-
-Resize.BackgroundColor3=
-Color3.fromRGB(255,0,0)
-
-
-Instance.new("UICorner",Resize)
 
 
 
 local resizing=false
 
-local start
 
 
 Resize.MouseButton1Down:Connect(function()
 
 resizing=true
 
-start=Main.Size
-
 end)
 
 
 
-UIS.InputEnded:Connect(function(input)
+UIS.InputEnded:Connect(function(i)
 
-if input.UserInputType==
-Enum.UserInputType.MouseButton1 then
+if i.UserInputType==Enum.UserInputType.MouseButton1 then
 
 resizing=false
 
@@ -537,21 +681,89 @@ end)
 
 
 
+UIS.InputChanged:Connect(function(i)
 
-UIS.InputChanged:Connect(function(input)
-
-if resizing and input.UserInputType ==
-Enum.UserInputType.MouseMovement then
+if resizing and i.UserInputType==Enum.UserInputType.MouseMovement then
 
 
-Main.Size =
+Main.Size=
 UDim2.fromOffset(
-math.max(400,start.X.Offset+input.Delta.X),
-math.max(250,start.Y.Offset+input.Delta.Y)
+Main.AbsoluteSize.X+i.Delta.X,
+Main.AbsoluteSize.Y+i.Delta.Y
 )
 
 
 end
 
+end)
+
+
+
+
+
+
+-- EXAMPLE
+
+
+local Home=CreateTab("🏠 Home")
+
+local Shop=CreateTab("🛒 Shop")
+
+local Setting=CreateTab("⚙ Setting")
+
+
+
+AddButton(Home,"Test Button",function()
+
+print("Click")
 
 end)
+
+
+
+AddSlider(Home,"Speed",1,100,50,function(v)
+
+print(v)
+
+end)
+
+
+
+AddDropdown(Home,"Mode",
+{"Normal","Fast","Ultra"},
+function(v)
+
+print(v)
+
+end)
+
+
+
+AddKeybind(Home,"Open Menu",
+Enum.KeyCode.RightShift,
+function()
+
+Main.Visible=not Main.Visible
+
+end)
+
+
+
+AddColorPicker(Home,"Color",function(c)
+
+Main.BackgroundColor3=c
+
+end)
+
+
+
+SaveConfig(
+"Settings",
+{
+Speed=50,
+Mode="Fast"
+}
+)
+
+
+PageLayout:JumpTo(Home)
