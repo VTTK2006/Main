@@ -121,7 +121,7 @@ local Mini=Instance.new("TextButton")
 Mini.Parent=Header
 
 Mini.Position=
-UDim2.new(1,-80,.5,-15)
+UDim2.new(1,-80,0.5,-15)
 
 Mini.Size=
 UDim2.fromOffset(30,30)
@@ -131,7 +131,14 @@ Mini.Text="-"
 Mini.TextColor3=
 Color3.new(1,1,1)
 
+Mini.TextSize=20
+
+Mini.Font=
+Enum.Font.GothamBold
+
 Mini.BackgroundTransparency=1
+
+Mini.ZIndex=5
 
 
 
