@@ -111,7 +111,23 @@ Close.Text="X"
 Close.BackgroundTransparency=1
 Close.TextColor3=Color3.new(1,1,1)
 
+local Open=Instance.new("ImageButton")
 
+Open.Parent=Gui
+
+Open.Size=UDim2.fromOffset(55,55)
+
+Open.Position=UDim2.fromScale(.1,.1)
+
+Open.Image="rbxassetid://88008118843799"
+
+Open.BackgroundColor3=
+Color3.fromRGB(20,20,20)
+
+Open.Visible=false
+
+
+Instance.new("UICorner",Open)
 Close.MouseButton1Click:Connect(function()
 Gui:Destroy()
 end)
