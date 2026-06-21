@@ -591,11 +591,12 @@ UDim2.fromOffset(15,15)
 Resize.Position=
 UDim2.new(1,-15,1,-15)
 
-Resize.Text=""
+Resize.Text="◢"
 
-Resize.BackgroundTransparency=1
+Resize.TextColor3=
+Color3.fromRGB(120,120,120)
 
-Resize.BorderSizePixel=0
+Resize.TextSize=14
 
 Resize.MouseButton1Down:Connect(function()
 
