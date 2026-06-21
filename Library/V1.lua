@@ -116,7 +116,65 @@ Close.MouseButton1Click:Connect(function()
 Gui:Destroy()
 end)
 
+local Mini=Instance.new("TextButton")
 
+Mini.Parent=Header
+
+Mini.Position=
+UDim2.new(1,-80,.5,-15)
+
+Mini.Size=
+UDim2.fromOffset(30,30)
+
+Mini.Text="-"
+
+Mini.TextColor3=
+Color3.new(1,1,1)
+
+Mini.BackgroundTransparency=1
+
+
+
+local Open=Instance.new("ImageButton")
+
+Open.Parent=Gui
+
+Open.Size=
+UDim2.fromOffset(55,55)
+
+Open.Position=
+UDim2.fromScale(.1,.1)
+
+Open.Image=
+"rbxassetid://ID_LOGO_CUA_BAN"
+
+Open.BackgroundColor3=
+Color3.fromRGB(20,20,20)
+
+Open.Visible=false
+
+
+Instance.new("UICorner",Open)
+
+
+
+Mini.MouseButton1Click:Connect(function()
+
+Main.Visible=false
+
+Open.Visible=true
+
+end)
+
+
+
+Open.MouseButton1Click:Connect(function()
+
+Main.Visible=true
+
+Open.Visible=false
+
+end)
 
 
 
