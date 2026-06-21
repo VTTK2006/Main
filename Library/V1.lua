@@ -153,7 +153,7 @@ Open.Position=
 UDim2.fromScale(.1,.1)
 
 Open.Image=
-"rbxassetid://ID_LOGO_CUA_BAN"
+"rbxassetid://88008118843799"
 
 Open.BackgroundColor3=
 Color3.fromRGB(20,20,20)
