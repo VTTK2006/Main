@@ -581,28 +581,7 @@ end
 -- RESIZE
 
 
-local Resize=Instance.new("TextButton")
 
-Resize.Parent=Main
-
-Resize.Size=
-UDim2.fromOffset(15,15)
-
-Resize.Position=
-UDim2.new(1,-15,1,-15)
-
-Resize.Text="◢"
-
-Resize.TextColor3=
-Color3.fromRGB(120,120,120)
-
-Resize.TextSize=14
-
-Resize.MouseButton1Down:Connect(function()
-
-resize=true
-
-end)
 
 
 
