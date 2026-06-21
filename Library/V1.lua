@@ -160,6 +160,8 @@ Color3.fromRGB(20,20,20)
 
 Open.Visible=false
 
+Open.ZIndex=10
+
 
 Instance.new("UICorner",Open)
 
