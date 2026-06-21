@@ -21,7 +21,7 @@ local TK = {}
 
 local Gui = Instance.new("ScreenGui")
 Gui.Name="TK_HUB"
-Gui.Parent=Player.PlayerGui
+Gui.Parent=game:GetService("CoreGui")
 
 
 
@@ -311,7 +311,7 @@ Pages[name]=Page
 
 Button.MouseButton1Click:Connect(function()
 
-PageLayout:JumpTo(Page)
+Home.Visible=true
 
 end)
 
@@ -763,7 +763,9 @@ SaveConfig(
 Speed=50,
 Mode="Fast"
 }
+
 )
 
 
 PageLayout:JumpTo(Home)
+return TK
