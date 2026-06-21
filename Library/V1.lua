@@ -585,15 +585,17 @@ local Resize=Instance.new("TextButton")
 
 Resize.Parent=Main
 
-Resize.Size=UDim2.fromOffset(20,20)
+Resize.Size=
+UDim2.fromOffset(15,15)
 
-Resize.Position=UDim2.new(1,-20,1,-20)
+Resize.Position=
+UDim2.new(1,-15,1,-15)
 
 Resize.Text=""
 
+Resize.BackgroundTransparency=1
 
-local resize=false
-
+Resize.BorderSizePixel=0
 
 Resize.MouseButton1Down:Connect(function()
 
